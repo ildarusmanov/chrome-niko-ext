@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <title>NikoNiko</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="angular.min.js"></script>
+    <script type="text/javascript" src="nikoniko.js"></script>
+  </head>
+  <body>
+    <div id="header">
+      <a href="http://nikoniko.com" id="logo"></a>
+      <ul id="menu">
+        <li><a href="#" data-target="teams">Teams</a></li>
+        <li><a href="#" data-target="sign_out">Sign Out</a></li>
+      </ul>
+    </div>
+    <div id="messages"></div>
+    <div id="screens">
+      <div class="screen sign_in">
+        <h1>Sign In</h1>
+        <form action="users/sign_in_new">
+          <input type="email" name="user[email]" placeholder="Enter your email..." style="width: 340px;"/>
+          <br/><br/>
+          <input type="password" name="user[password]" placeholder="Enter your password..." style="width: 340px;"/>
+          <br/><br/>
+          <input type="submit" value="Sign In"/>
+        </form>
+      </div>
+      <div class="screen teams">
+        <h1>Teams</h1>
+        <ul class="list"></ul>
+      </div>
+      <div class="screen questions">
+        <h1>Questions</h1>
+        <ul class="list"></ul>
+      </div>
+      <div class="screen answer">
+        <h1></h1>
+        <form action="nikos">
+          <ul class="values">
+            <li><a href="#" data-value="0" class="value_0">Very Bad</a></li>
+            <li><a href="#" data-value="25" class="value_25">Bad</a></li>  
+            <li><a href="#" data-value="50" class="value_50">Neutral</a></li>  
+            <li><a href="#" data-value="75" class="value_75">Good</a></li>  
+            <li><a href="#" data-value="100" class="value_100">Very Good</a></li>  
+          </ul>
+          <br/><br/>
+          <input type="hidden" name="niko[question_id]" value=""/>
+          <input type="hidden" name="niko[group_id]" value=""/>
+          <input type="hidden" name="niko[value]" value=""/>
+          <input type="text" name="niko[message]" placeholder="Enter your comment..." style="width: 340px;"/>
+          <br/><br/>
+          <input type="submit" value="Post answer"/>
+        </form>
+      </div>
+    </div>
+    <div id="loading">Loading...</div>
+  </body>
+</html>
+

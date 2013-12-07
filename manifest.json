@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+
+  "name": "NikoNiko",
+  "description": "www.nikoniko.co chrome extension",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "nikoniko.html"
+  },
+
+  "permissions": [
+    "http://nikoniko.co/",
+    "storage"
+  ]
+}
