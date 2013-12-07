@@ -298,10 +298,7 @@ var NIKONIKO = {
 			self.setActiveTeam(r.active_team);
 			self.setActivePage(r.active_page);
 			data = r.userdata;
-			if(data == null
-				|| data == 'undefined'
-				|| data.token == null
-				|| data.token == 'undefined'){
+			if(data == null || data == 'undefined' || data.token == null || data.token == 'undefined'){
 				;
 			}else{
 				self.setUser(data);
