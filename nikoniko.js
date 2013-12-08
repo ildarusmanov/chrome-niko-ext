@@ -90,7 +90,7 @@ var NIKONIKO = {
 	   	
 	   	$('#screens').find('.screen.' + class_name).show(0);
 	   	$('#screens').find('.screen.' + class_name).addClass('active');
-	   	this.ACTIVE_PAGE = class_name;
+	   	this.setActivePage(class_name);
 
 	   	if(class_name == 'sign_in'){
 	   		$('#header #menu').hide(0);
@@ -292,7 +292,7 @@ var NIKONIKO = {
 		self = this;
 		this.bindEvents();
 		this.USER_DATA = null;
-		this.STORAGE.get('userdata', function(r){
+		this.STORAGE.get(null, function(r){
 			console.log('userdata from storage');
 			console.log(r.userdata);
 			self.setActiveTeam(r.active_team);
