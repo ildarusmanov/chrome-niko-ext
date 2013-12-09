@@ -193,6 +193,7 @@ var NIKONIKO = {
    				self.ajaxFree();
    				if(data.status == 'success'){
    					self.showMessage('Answer successfully sent!');
+            self.showTeams();
    				}else{
    					self.showMessage('Error!');
    				}
