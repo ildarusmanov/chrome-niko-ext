@@ -285,23 +285,23 @@ var NIKONIKO = {
    	},
 
    	run: function(){
-		self = this;
-		this.bindEvents();
-		this.USER_DATA = null;
-		this.STORAGE.get(null, function(r){
-			console.log('userdata from storage');
-			console.log(r.userdata);
-			self.setActiveTeam(r.active_team);
-			self.setActivePage(r.active_page);
-			data = r.userdata;
-			if(data == null || data == 'undefined' || data.token == null || data.token == 'undefined'){
-				;
-			}else{
-				self.setUser(data);
-			}
+  		self = this;
+  		this.bindEvents();
+  		this.USER_DATA = null;
+  		this.STORAGE.get(null, function(r){
+  			console.log('userdata from storage');
+  			console.log(r.userdata);
+  			self.setActiveTeam(r.active_team);
+  			self.setActivePage(r.active_page);
+  			data = r.userdata;
+  			if(data == null || data == 'undefined' || data.token == null || data.token == 'undefined'){
+  				;
+  			}else{
+  				self.setUser(data);
+  			}
 
-			self.init();
-		});
+  			self.init();
+  		});
    	}
 };
 
