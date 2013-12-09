@@ -87,7 +87,7 @@ var NIKONIKO = {
    	showWindow: function(class_name){
 	   	$('#screens .screen').hide();
 	   	$('#screens .screen').removeClass('active');
-	   	
+
 	   	$('#screens').find('.screen.' + class_name).show(0);
 	   	$('#screens').find('.screen.' + class_name).addClass('active');
 	   	this.setActivePage(class_name);
@@ -117,7 +117,7 @@ var NIKONIKO = {
 	   		data: $(form).serialize(),
 	   		dataType: 'json',
 	   		success: function(data, textStatus, jqXHR){
-	   			console.log(data);
+	   			self.ajaxFree();
 	   			if(data.status == 'failure'){
 	   				self.showMessage('Error!');
 	   				self.setUser(null);
@@ -126,7 +126,6 @@ var NIKONIKO = {
 	   				self.setUser(data);
 	   				self.showTeams();
 	   			}
-	   			self.ajaxFree();
 	   		}
 	   	});
    	},
@@ -149,9 +148,8 @@ var NIKONIKO = {
    			url:  self._url('groups/joined_groups'),
    			dataType: 'json',
    			success: function(data, textStatus, jqXHR){
-   				console.log(data);
-   				self.renderTeams(data);
    				self.ajaxFree();
+   				self.renderTeams(data);
    			}
    		});
    	},
@@ -174,9 +172,8 @@ var NIKONIKO = {
    			url:  self._url('users/' + self.getActiveTeam() + '/get_questions'),
    			dataType: 'json',
    			success: function(data, textStatus, jqXHR){
-   				console.log(data);
-   				self.renderQuestions(data.questions);
    				self.ajaxFree();
+   				self.renderQuestions(data.questions);
    			}
    		});
    	},
@@ -188,19 +185,17 @@ var NIKONIKO = {
    		$('input[name="niko[group_id]"]').val(self.getActiveTeam());
 
    		this.ajaxRequest({
-   			url: self._url('nikos'), 
+   			url: self._url('nikos'),
    			method: 'POST',
    			data: $('#screens .answer form').serialize(),
    			dataType: 'json',
    			success: function(data, textStatus, jqXHR){
-   				console.log(data);
+   				self.ajaxFree();
    				if(data.status == 'success'){
    					self.showMessage('Answer successfully sent!');
    				}else{
    					self.showMessage('Error!');
    				}
-   				self.ajaxFree();
-   				
    			}
    		});
    	},
