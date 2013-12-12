@@ -163,13 +163,24 @@ ul.list li {
   font-style: italic;
   font-size: 14px;
   color: #999;
-  padding: 0px 15px 15px 15px;
+  position: absolute;
+  top: 5px;
+  left:10px;
 }
 
 
 
 
 /* ------ */
+
+.alert {
+  background: #1abc9c;
+  color: #fff;
+  text-align: center;
+  margin: 0 10px;
+  border-radius: 3px;
+  line-height: 30px;
+}
 
 form ul {
   list-style: none;
