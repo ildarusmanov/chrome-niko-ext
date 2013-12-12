@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+::-webkit-input-placeholder { color: #fff;text-transform: uppercase;}
+:-moz-placeholder { color: #fff;text-transform: uppercase;}
+::-moz-placeholder { color: #fff;text-transform: uppercase;}
+:-ms-input-placeholder { color: #fff;text-transform: uppercase;}
+
 .cf:before, .cf:after { content: " "; display: table;}
 .cf:after {clear: both;}
 .cf { *zoom: 1;}
@@ -195,10 +200,12 @@ form textarea {
   padding: 0 10px;
   line-height: 30px;
   height: 30px;
-  border: 1px solid #ccc;
+  border: none;
   width: 100%;
   outline: none;
   border-radius: 3px;
+  background: #95a5a6;
+  color: #fff;
 }
 
 form textarea {
@@ -209,7 +216,7 @@ form input[type="text"]:focus,
 form input[type="email"]:focus,
 form input[type="password"]:focus,
 form textarea:focus {
-  border-color: #2980b9;
+  background: #7f8c8d;
 }
 
 form input[type="submit"] {
