@@ -100,7 +100,7 @@ var NIKONIKO = {
    	},
 
    	showMessage: function(text){
-   		$('#messages').html(text).show(0).delay(2000).hide(0);
+   		$('.alert').html(text).fadeIn(100).delay(2500).fadeOut(500).hide(0);
    	},
 
    	signOut: function(){
