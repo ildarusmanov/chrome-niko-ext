@@ -129,7 +129,7 @@ ul.list li {
 }
 
 .value_0 {
-  background: #ff4530;
+  background: #c0392b;
 }
 
 .value_0:after,
@@ -153,10 +153,10 @@ ul.list li {
 .value_75:after {content: "Good";}
 .value_100:after {content: "Very Good";}
 
-.value_25 {background: #fc8460;}
-.value_50 {background: #ff9932;}
-.value_75 {background: #fcc176;}
-.value_100 {background: #ffe969;}
+.value_25 {background: #d35400;}
+.value_50 {background: #e67e22;}
+.value_75 {background: #f39c12;}
+.value_100 {background: #f1c40f;}
 
 #loading {
   display: none;
