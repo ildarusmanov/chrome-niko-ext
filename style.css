@@ -146,8 +146,8 @@ h1 {
 }
 
 .value_0:after {content: "Very Bad";}
-.value_25:after {content: "Neutral";}
-.value_50:after {content: "Good";}
+.value_25:after {content: "Bad";}
+.value_50:after {content: "Neutral";}
 .value_75:after {content: "Good";}
 .value_100:after {content: "Very Good";}
 
