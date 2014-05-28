@@ -12,6 +12,7 @@
 
   "permissions": [
     "http://nikoniko.co/",
+    "http://www.nikoniko.co/",
     "storage"
   ]
 }

@@ -1,11 +1,23 @@
 
 var NIKONIKO = {
-	ENV_URL: 'http://nikoniko.co/',
+	ENV_URL: 'http://www.nikoniko.co/',
 	USER_DATA: null,
 	ACTIVE_PAGE: null,
 	ACTIVE_TEAM: null,
 	STORAGE: chrome.storage.local,
 	REQUEST: null,
+
+  setAllRead: function() {
+      var bs = chrome.browserAction;
+      bs.setBadgeBackgroundColor({color: [0, 255, 0, 128]});
+      bs.setBadgeText({text: " "});   // <-- set text to "" to remove the badge
+  },
+
+  setUnread: function(cnt) {
+     var bs = chrome.browserAction;
+      bs.setBadgeBackgroundColor({color: [255, 0, 0, 128]});
+      bs.setBadgeText({text: "" + cnt});
+  },
 
 	ajaxRequest: function(opts) {
 		if(this.REQUEST) return;
@@ -169,7 +181,7 @@ var NIKONIKO = {
    		console.log('load questions');
    		self = this;
    		this.ajaxRequest({
-   			url:  self._url('users/' + self.getActiveTeam() + '/get_questions'),
+   			url:  self._url('groups/' + self.getActiveTeam() + '/get_active_questions'),
    			dataType: 'json',
    			success: function(data, textStatus, jqXHR){
    				self.ajaxFree();
