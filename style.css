@@ -28,6 +28,10 @@ body {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7',GradientType=0 );
 }
 
+.screen {
+  display: none;
+}
+
 .content {
   padding: 10px;
 }
@@ -277,4 +281,13 @@ form input[type="submit"]:hover {
 
 .answer textarea {
   height: 80px;
+}
+
+.notifications_count {
+  background: #f00;
+  color: #fff;
+  border-radius: 3px;
+  padding: 2px 4px 2px 4px;
+  display: inline-block;
+  margin-left: 3px;
 }

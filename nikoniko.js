@@ -1,22 +1,22 @@
 
 var NIKONIKO = {
-	ENV_URL: 'http://www.nikoniko.co/',
 	USER_DATA: null,
 	ACTIVE_PAGE: null,
 	ACTIVE_TEAM: null,
 	STORAGE: chrome.storage.local,
 	REQUEST: null,
+  NOTIFICATIONS: [],
 
   setAllRead: function() {
-      var bs = chrome.browserAction;
-      bs.setBadgeBackgroundColor({color: [0, 255, 0, 128]});
-      bs.setBadgeText({text: " "});   // <-- set text to "" to remove the badge
+    $('.notifications_count').hide();
   },
 
   setUnread: function(cnt) {
-     var bs = chrome.browserAction;
-      bs.setBadgeBackgroundColor({color: [255, 0, 0, 128]});
-      bs.setBadgeText({text: "" + cnt});
+    if(cnt == 0){
+      return this.setAllRead();
+    }
+    $('.notifications_count').show();
+    $('.notifications_count').html(cnt + '');
   },
 
 	ajaxRequest: function(opts) {
@@ -34,13 +34,48 @@ var NIKONIKO = {
 		var data = {
 			'userdata': this.getUser(),
 			'active_team': this.getActiveTeam(),
-			'active_page': this.getActivePage()
+			'active_page': this.getActivePage(),
+      'notifications': this.getNotifications()
 		};
 
 		this.STORAGE.set(data, function(){
 			console.log('Saved to storage');
 		});
 	},
+
+  readNotification: function(id){
+    console.log('load notifications');
+    self = this;
+    chrome.extension.getBackgroundPage().NIKONIKO_BG.readNotification(id);
+    this.ajaxRequest({
+        url:  self._url('api/v1/notifications/' + id),
+        data: { _method: 'PUT' },
+        type: 'POST',
+        dataType: 'json',
+        success: function(data, textStatus, jqXHR){
+          self.ajaxFree();
+          console.log('data notifications');
+          console.log(data);
+          self.setNotifications(data);
+      }
+    });
+  },
+
+
+  setNotifications: function(){
+    n_count = 0;
+    var notifications = this.getNotifications();
+    for(i in notifications){
+      var n = notifications[i];
+      if(n.unread) n_count++;
+    }
+    console.log(notifications);
+    this.setUnread(n_count);
+  },
+
+  getNotifications: function(){
+    return chrome.extension.getBackgroundPage().NIKONIKO_BG.getNotifications();
+  },
 
 	setActivePage: function(page) {
 		this.ACTIVE_PAGE = page;
@@ -89,11 +124,7 @@ var NIKONIKO = {
    	},
 
    	_url: function(page){
-   		if(this.getToken() == ''){
-   			return this.ENV_URL + page;
-   		}else{
-   			return this.ENV_URL + page + '?token=' + this.getToken();
-   		}
+   		return chrome.extension.getBackgroundPage().NIKONIKO_BG._url(page);
    	},
 
    	showWindow: function(class_name){
@@ -117,6 +148,7 @@ var NIKONIKO = {
 
    	signOut: function(){
    		this.setUser(null);
+      this.hideMenu();
    		this.showWindow('sign_in');
    	},
 
@@ -133,8 +165,10 @@ var NIKONIKO = {
 	   			if(data.status == 'failure'){
 	   				self.showMessage('Error!');
 	   				self.setUser(null);
+            self.hideMenu();
 	   			}else{
 	   				self.showMessage('Authorized!');
+            self.showMenu();
 	   				self.setUser(data);
 	   				self.showTeams();
 	   			}
@@ -235,6 +269,48 @@ var NIKONIKO = {
    		this.showWindow('answer');
    	},
 
+    showNotification: function(notification_id){
+      console.log('show notification ' + notification_id);
+      var id = parseInt(notification_id);
+      var notifications = this.getNotifications();
+      var notification = null;
+      for(i in notifications){
+        if(notifications[i].id == id){
+          notification = notifications[i];
+          break;
+        }
+      }
+      if(notification == null) return;
+      this.setActiveTeam(notification.group_id);
+      this.showAnswerForm(notification.body);
+      $('#screens .answer h1').html('Q: ' + notification.subject);
+      this.showWindow('answer');
+      this.readNotification(notification.id);
+    },
+
+    renderNotifications: function(){
+      self = this;
+
+      var notifications = this.getNotifications();
+      var html = '';
+      for(i in notifications){
+        var notification = notifications[i];
+        html = html + '<li>You have new question: <a href="#" data-notification-id="' + notification.id + '">' + notification.subject + '</a></li>';
+      }
+
+      $('#screens .screen.notifications .list').html(html);
+
+      $('#screens .screen.notifications .list a').click(function(){
+        var id = $(this).data('notification-id');
+        self.showNotification(id);
+      });
+    },
+
+    showNotifications: function(){
+      this.renderNotifications();
+      this.showWindow('notifications');
+    },
+
    	bindEvents: function(){
 	   	var self = this;
 
@@ -281,20 +357,44 @@ var NIKONIKO = {
    			if(target == 'sign_out') {
    				self.signOut();
    			}
+
+        if(target == 'notifications'){
+          self.showNotifications();
+        }
+
    		});
    	},
 
+    hideMenu: function(){
+      $('#menu li').hide();
+    },
+
+    showMenu: function(){
+      $('#menu li').show();
+    },
+
    	init: function(){
+      setInterval(function(){ NIKONIKO.reloadStorage(); }, 500);
+
    		if(this.isGuest()){
    			this.showSignIn();
+        this.hideMenu();
    		}else{
+        this.showMenu();
    			if(this.getActivePage() == 'questions'){
    				this.showQuestions();
-   			}else{
+   			}else if(this.getActivePage() == 'questions'){
+          this.showNotifications();
+        }else{
    				this.showTeams();
    			}
    		}
    	},
+
+    reloadStorage: function(){
+      if(this.isGuest()) return false;
+      this.setNotifications();
+    },
 
    	run: function(){
   		self = this;
@@ -305,9 +405,11 @@ var NIKONIKO = {
   			console.log(r.userdata);
   			self.setActiveTeam(r.active_team);
   			self.setActivePage(r.active_page);
+        self.setNotifications(r.notifications);
   			data = r.userdata;
   			if(data == null || data == 'undefined' || data.token == null || data.token == 'undefined'){
-  				;
+  				self.NOTIFICATIONS = [];
+          self.updateStorage();
   			}else{
   				self.setUser(data);
   			}

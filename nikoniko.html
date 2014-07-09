@@ -4,12 +4,12 @@
     <title>NikoNiko</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
     <script type="text/javascript" src="jquery.js"></script>
-    <script type="text/javascript" src="angular.min.js"></script>
     <script type="text/javascript" src="nikoniko.js"></script>
   </head>
   <body>
     <div id="header cf">
       <ul id="menu">
+        <li><a href="#" data-target="notifications">Notifications<span class="notifications_count"></span></a></li>
         <li><a href="#" data-target="teams">Teams</a></li>
         <li><a href="#" data-target="sign_out">Sign Out</a></li>
       </ul>
@@ -64,6 +64,10 @@
               </li>
             </ul>
           </form>
+        </div>
+        <div class="screen notifications">
+          <h1>Notifications</h1>
+          <ul class="list"></ul>
         </div>
       </div>
     </div>
