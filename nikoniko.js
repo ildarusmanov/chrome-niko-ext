@@ -281,7 +281,7 @@ var NIKONIKO = {
 
     for(i in notifications){
       var notification = notifications[i];
-      var class_name = 'notifiaction';
+      var class_name = 'notification';
       if(notification.unread){
         class_name = 'unread_notification';
       }
