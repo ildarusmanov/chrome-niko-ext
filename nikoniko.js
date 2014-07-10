@@ -286,7 +286,7 @@ var NIKONIKO = {
       for(i in notifications){
         var notification = notifications[i];
         var class_name = 'notifiaction';
-        if(notifiaction.unread){
+        if(notification.unread){
           var class_name = 'unread_notification';
         }
         html = '<li class="' + class_name + '">You have new question: <a href="#" data-notification-id="' + notification.id + '">' + notification.subject + '</a></li>' + html;
