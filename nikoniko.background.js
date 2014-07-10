@@ -1,12 +1,13 @@
 
 var NIKONIKO_BG = {
-  ENV_URL: 'http://nikoniko.co/',
+  ENV_URL: 'http://0.0.0.0:3000/',
   USER_DATA: null,
   ACTIVE_PAGE: null,
   ACTIVE_TEAM: null,
   STORAGE: chrome.storage.local,
   REQUEST: null,
   NOTIFICATIONS: [],
+  STORAGE_LOCK: false,
 
   setAllRead: function() {
     var bs = chrome.browserAction;
@@ -35,7 +36,45 @@ var NIKONIKO_BG = {
     $('#loading').hide();
   },
 
-  updateStorage: function(){
+  getStorage: function(){
+    return this.STORAGE;
+  },
+
+  lockStorage: function(){
+    this.STORAGE_LOCK = true;
+  },
+
+  unlockStorage: function(){
+    this.STORAGE_LOCK = false;
+  },
+
+  storageLocked: function(){
+    return this.STORAGE_LOCK;
+  },
+
+  clearStorage: function(){
+    self = this;
+    this.getStorage().clear(function(){
+      self.USER_DATA = null;
+      self.ACTIVE_PAGE = null;
+      self.ACTIVE_TEAM = null;
+      self.NOTIFICATIONS = [];
+    });
+  },
+
+  loadFromStorage: function(callback){
+    this.getStorage().get(null, function(data){
+      if(data == null) return;
+      self.ACTIVE_TEAM = data.active_team;
+      self.ACTIVE_PAGE = data.active_page;
+      self.USER_DATA = data.userdata;
+      self.updateStorage(callback);
+    });
+  },
+
+  updateStorageStrong: function(callback){
+    this.lockStorage();
+
     var data = {
       'userdata': this.getUser(),
       'active_team': this.getActiveTeam(),
@@ -43,8 +82,34 @@ var NIKONIKO_BG = {
       'notifications': this.getNotifications()
     };
 
-    this.STORAGE.set(data, function(){
-      //console.log('Saved to storage');
+    self = this;
+
+    this.getStorage().set(data, function(){
+      self.unlockStorage();
+      callback();
+    });
+  },
+
+  updateStorage: function(callback){
+    if(this.storageLocked()){
+      console.log('can`t save, storage locked');
+      return;
+    }
+
+    this.lockStorage();
+
+    var data = {
+      'userdata': this.getUser(),
+      'active_team': this.getActiveTeam(),
+      'active_page': this.getActivePage(),
+      'notifications': this.getNotifications()
+    };
+
+    self = this;
+
+    this.getStorage().set(data, function(){
+      self.unlockStorage();
+      callback();
     });
   },
 
@@ -80,7 +145,7 @@ var NIKONIKO_BG = {
       }
     }
 
-    this.updateStorage();
+    this.updateStorage(function(){;});
 
     if(this.isGuest()) return false;
 
@@ -106,7 +171,7 @@ var NIKONIKO_BG = {
 
   setActivePage: function(page) {
     this.ACTIVE_PAGE = page;
-    this.updateStorage();
+    this.updateStorage(function(){;});
   },
 
   getActivePage: function(){
@@ -115,7 +180,7 @@ var NIKONIKO_BG = {
 
   setActiveTeam: function(team_id) {
     this.ACTIVE_TEAM = team_id;
-    this.updateStorage();
+    this.updateStorage(function(){;});
   },
 
   getActiveTeam: function(){
@@ -126,7 +191,7 @@ var NIKONIKO_BG = {
     //console.log('setUser');
     //console.log(data);
     this.USER_DATA = data;
-    this.updateStorage();
+    this.updateStorage(function(){;});
   },
 
   getUser: function(){
@@ -178,8 +243,7 @@ var NIKONIKO_BG = {
         type: "basic",
         title: "You have new question!",
         message: "How are you feeling today?",
-        iconUrl: 'notification.png'//,
-        //buttons: [{ title: 'Answer'}]
+        iconUrl: 'notification.png'
       };
 
       options.message = notification.subject;
@@ -187,43 +251,29 @@ var NIKONIKO_BG = {
       var self = this;
 
       chrome.notifications.onClicked.addListener(function(notification_id){;
-        //var views = chrome.extension.getViews();
-        //if(views.length > 0){
-        //  views[0].NIKONIKO.showNotification(notification_id);
-        //}
+        //console.log('notification clicked');
       });
 
       chrome.notifications.create(notification.id + '', options, function(){
-        //console.log('created');
+        //console.log('notification created');
       });
   },
 
   init: function(){
-    if(this.isGuest()) return false;
+    if(this.isGuest()){
+      this.clearStorage();
+      return false;
+    }
+
     this.loadNotifications();
   },
 
   run: function(){
-      self = this;
-      this.USER_DATA = null;
-      this.STORAGE.get(null, function(r){
-        //console.log('userdata from storage');
-        //console.log(r);
-        if(r == null){
-          return;
-        }
-        //console.log(r.userdata);
-        self.setActiveTeam(r.active_team);
-        self.setActivePage(r.active_page);
-        data = r.userdata;
-
-        if(data == null || data == 'undefined' || data.token == null || data.token == 'undefined'){
-          return;
-        }
-
-        self.setUser(data);
-        self.init();
-      });
+    self = this;
+    this.USER_DATA = null;
+    this.loadFromStorage(function() {
+      self.init();
+    })
   }
 };
 

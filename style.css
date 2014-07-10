@@ -269,6 +269,10 @@ form input[type="submit"]:hover {
   text-transform: uppercase;
 }
 
+#menu a.active, #menu a.hover {
+  text-decoration: underline;
+}
+
 .list a {
   color: #494949;
   outline: none;
