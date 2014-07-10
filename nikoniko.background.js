@@ -1,4 +1,3 @@
-
 var NIKONIKO_BG = {
   ENV_URL: 'http://nikoniko-stage.herokuapp.com/',
   USER_DATA: null,
@@ -129,9 +128,6 @@ var NIKONIKO_BG = {
   },
 
   setNotifications: function(data){
-    console.log('setNotifications');
-    console.log(data);
-
     var to_render = [];
 
     for(i in data) {
@@ -216,47 +212,47 @@ var NIKONIKO_BG = {
   },
 
   _url: function(page){
-      if(this.getToken() == ''){
-        return this.ENV_URL + page;
-      }else{
-        return this.ENV_URL + page + '?token=' + this.getToken();
-      }
+    if(this.getToken() == ''){
+      return this.ENV_URL + page;
+    }else{
+      return this.ENV_URL + page + '?token=' + this.getToken();
+    }
   },
 
   loadNotifications: function(){
-      //console.log('load notifications');
-      self = this;
-      this.ajaxRequest({
-        url:  self._url('api/v1/notifications'),
-        dataType: 'json',
-        success: function(data, textStatus, jqXHR){
-          self.ajaxFree();
-          //console.log('data notifications');
-          //console.log(data);
-          self.setNotifications(data);
-        }
-      });
+    //console.log('load notifications');
+    self = this;
+    this.ajaxRequest({
+      url:  self._url('api/v1/notifications'),
+      dataType: 'json',
+      success: function(data, textStatus, jqXHR){
+        self.ajaxFree();
+        //console.log('data notifications');
+        //console.log(data);
+        self.setNotifications(data);
+      }
+    });
   },
 
   renderQuestionNotification: function(notification){
-      var options = {
-        type: "basic",
-        title: "You have new question!",
-        message: "How are you feeling today?",
-        iconUrl: 'notification.png'
-      };
+    var options = {
+      type: "basic",
+      title: "You have new question!",
+      message: "How are you feeling today?",
+      iconUrl: 'notification.png'
+    };
 
-      options.message = notification.subject;
+    options.message = notification.subject;
 
-      var self = this;
+    var self = this;
 
-      chrome.notifications.onClicked.addListener(function(notification_id){;
-        //console.log('notification clicked');
-      });
+    chrome.notifications.onClicked.addListener(function(notification_id){;
+      //console.log('notification clicked');
+    });
 
-      chrome.notifications.create(notification.id + '', options, function(){
-        //console.log('notification created');
-      });
+    chrome.notifications.create(notification.id + '', options, function(){
+      //console.log('notification created');
+    });
   },
 
   init: function(){

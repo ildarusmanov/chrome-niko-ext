@@ -1,5 +1,5 @@
 var NIKONIKO = {
-	REQUEST: null,
+  REQUEST: null,
   RENDER_TIMER: null,
 
   getBg: function() {
@@ -18,21 +18,20 @@ var NIKONIKO = {
     this.getBg().clearStorage();
   },
 
-	ajaxRequest: function(opts) {
-		if(this.REQUEST) return;
-		$('#loading').show().delay(500);
-		this.REQUEST = $.ajax(opts);
-	},
+  ajaxRequest: function(opts) {
+    if(this.REQUEST) return;
+    $('#loading').show().delay(500);
+    this.REQUEST = $.ajax(opts);
+  },
 
-	ajaxFree: function() {
-		this.REQUEST = null;
-		$('#loading').hide();
-	},
+  ajaxFree: function() {
+    this.REQUEST = null;
+    $('#loading').hide();
+  },
 
   startRender: function(callback) {
     this.stopRender();
     this.RENDER_TIMER = setInterval(5000, function(){
-      console.log('render reload');
       callback();
     });
   },
@@ -48,9 +47,7 @@ var NIKONIKO = {
   },
 
   setUnread: function(cnt) {
-    if(cnt == 0){
-      return this.setAllRead();
-    }
+    if(cnt == 0) return this.setAllRead();
     $('.notifications_count').show();
     $('.notifications_count').html(cnt + '');
   },
@@ -59,13 +56,13 @@ var NIKONIKO = {
     self = this;
     this.getBg().readNotification(id);
     this.ajaxRequest({
-        url:  self._url('api/v1/notifications/' + id),
-        data: { _method: 'PUT' },
-        type: 'POST',
-        dataType: 'json',
-        success: function(data, textStatus, jqXHR){
-          self.ajaxFree();
-          self.setNotifications(data);
+      url:  self._url('api/v1/notifications/' + id),
+      data: { _method: 'PUT' },
+      type: 'POST',
+      dataType: 'json',
+      success: function(data, textStatus, jqXHR){
+        self.ajaxFree();
+        self.setNotifications(data);
       }
     });
   },
@@ -85,172 +82,171 @@ var NIKONIKO = {
     return this.getBg().getNotifications();
   },
 
-	setActivePage: function(page) {
-    this.stopRender();
-		this.getBg().setActivePage(page);
-
+  setActivePage: function(page) {
+  this.stopRender();
+  this.getBg().setActivePage(page);
     $('#menu li a.active').removeClass('active');
     $('#menu li a[data-target="' + page + '"]').addClass('active');
-	},
+  },
 
-	getActivePage: function(){
-		return this.getBg().getActivePage();
-	},
+  getActivePage: function(){
+    return this.getBg().getActivePage();
+  },
 
-	setActiveTeam: function(team_id) {
-		this.getBg().setActiveTeam(team_id);
-	},
+  setActiveTeam: function(team_id) {
+    this.getBg().setActiveTeam(team_id);
+  },
 
-	getActiveTeam: function(){
-		return this.getBg().getActiveTeam();
-	},
+  getActiveTeam: function(){
+    return this.getBg().getActiveTeam();
+  },
 
-	setUser: function(data){
-		this.getBg().setUser(data);
-	},
+  setUser: function(data){
+    this.getBg().setUser(data);
+  },
 
-	getUser: function(){
-		return this.getBg().getUser();
-	},
+  getUser: function(){
+    return this.getBg().getUser();
+  },
 
-	getToken: function(){
-		return this.getBg().getToken();
-	},
+  getToken: function(){
+    return this.getBg().getToken();
+  },
 
   isGuest: function(){
     return this.getBg().isGuest();
   },
 
   _url: function(page){
-   	return this.getBg()._url(page);
+    return this.getBg()._url(page);
   },
 
   showWindow: function(class_name){
-	  $('#screens .screen').hide();
-	  $('#screens .screen').removeClass('active');
+    $('#screens .screen').hide();
+    $('#screens .screen').removeClass('active');
 
-	  $('#screens').find('.screen.' + class_name).show(0);
-	  $('#screens').find('.screen.' + class_name).addClass('active');
+    $('#screens').find('.screen.' + class_name).show(0);
+    $('#screens').find('.screen.' + class_name).addClass('active');
 
     this.setActivePage(class_name);
 
-	  if(class_name == 'sign_in'){
-	  	$('#header #menu').hide(0);
-	  }else{
-	   	$('#header #menu').show(0);
-	  }
+    if(class_name == 'sign_in'){
+      $('#header #menu').hide(0);
+    }else{
+      $('#header #menu').show(0);
+    }
   },
 
   showMessage: function(text){
-  	$('.alert').html(text).fadeIn(100).delay(1000).fadeOut(300).hide(0);
+    $('.alert').html(text).fadeIn(100).delay(1000).fadeOut(300).hide(0);
   },
 
   signOut: function(){
-  	this.clearStorage();
+    this.clearStorage();
     this.hideMenu();
-  	this.showWindow('sign_in');
+    this.showWindow('sign_in');
   },
 
   signIn: function(form){
-	  self = this;
-	  this.ajaxRequest({
-	  	url: self._url($(form).attr('action')),
-	  	type: 'POST',
-	  	data: $(form).serialize(),
-	  	dataType: 'json',
-	   	success: function(data, textStatus, jqXHR){
-   			self.ajaxFree();
-   			if(data.status == 'failure'){
-   				self.showMessage('Error!');
-   				self.clearStorage();
+    self = this;
+    this.ajaxRequest({
+      url: self._url($(form).attr('action')),
+      type: 'POST',
+      data: $(form).serialize(),
+      dataType: 'json',
+      success: function(data, textStatus, jqXHR){
+        self.ajaxFree();
+        if(data.status == 'failure'){
+          self.showMessage('Error!');
+          self.clearStorage();
           self.hideMenu();
-   			}else{
-   				self.showMessage('Authorized!');
+        }else{
+          self.showMessage('Authorized!');
           self.showMenu();
-   				self.setUser(data);
-   				self.showTeams();
-   			}
-	   	}
+          self.setUser(data);
+          self.showTeams();
+        }
+      }
     });
   },
 
   renderTeams: function(teams){
-   	$('#screens .teams ul.list').html('');
-   	for(i in teams){
-   		var t = teams[i];
-   		var html = '<li><a data-team-id="' + t.id + '" href="#">' + t.title + '</a></li>';
-   		$('#screens .teams ul').append(html);
-   	}
+    $('#screens .teams ul.list').html('');
+    for(i in teams){
+      var t = teams[i];
+      var html = '<li><a data-team-id="' + t.id + '" href="#">' + t.title + '</a></li>';
+      $('#screens .teams ul').append(html);
+    }
 
-   	this.bindEvents();
+    this.bindEvents();
   },
 
   loadTeams: function(){
-  	self = this;
-  	this.ajaxRequest({
-  		url:  self._url('groups/joined_groups'),
-  		dataType: 'json',
-  		success: function(data, textStatus, jqXHR){
-  			self.ajaxFree();
+    self = this;
+    this.ajaxRequest({
+      url:  self._url('groups/joined_groups'),
+      dataType: 'json',
+      success: function(data, textStatus, jqXHR){
+        self.ajaxFree();
         self.renderTeams(data);
-  		}
-  	});
+      }
+    });
   },
 
   renderQuestions: function(questions){
-   		$('#screens .questions ul.list').html('');
-   		for(i in questions){
-   			var q = questions[i];
-   			var html = '<li><a data-question-id="' + q.id + '" href="#">' + q.text + '</a></li>';
-   			$('#screens .questions ul').append(html);
-   		}
+    $('#screens .questions ul.list').html('');
+    for(i in questions){
+      var q = questions[i];
+      var html = '<li><a data-question-id="' + q.id + '" href="#">' + q.text + '</a></li>';
+      $('#screens .questions ul').append(html);
+    }
 
-   		this.bindEvents();
+    this.bindEvents();
   },
 
   loadQuestions: function(){
-   		self = this;
-   		this.ajaxRequest({
-   			url:  self._url('groups/' + self.getActiveTeam() + '/get_active_questions'),
-   			dataType: 'json',
-   			success: function(data, textStatus, jqXHR){
-   				self.ajaxFree();
-   				self.renderQuestions(data.questions);
-   			}
-   		});
+    self = this;
+    this.ajaxRequest({
+      url:  self._url('groups/' + self.getActiveTeam() + '/get_active_questions'),
+      dataType: 'json',
+      success: function(data, textStatus, jqXHR){
+        self.ajaxFree();
+        self.renderQuestions(data.questions);
+      }
+    });
   },
 
   sendAnswerForm: function(){
-   		self = this;
-   		var v = $('#screens .answer ul.values li a.selected_value:first').attr('data-value');
-   		$('input[name="niko[value]"]').val(v);
-   		$('input[name="niko[group_id]"]').val(self.getActiveTeam());
+    self = this;
+    var v = $('#screens .answer ul.values li a.selected_value:first').attr('data-value');
+    $('input[name="niko[value]"]').val(v);
+    $('input[name="niko[group_id]"]').val(self.getActiveTeam());
 
-   		this.ajaxRequest({
-   			url: self._url('nikos'),
-   			method: 'POST',
-   			data: $('#screens .answer form').serialize(),
-   			dataType: 'json',
-   			success: function(data, textStatus, jqXHR){
-   				self.ajaxFree();
-   				if(data.status == 'success'){
-   					self.showMessage('Answer successfully sent!');
-            self.showTeams();
-   				}else{
-   					self.showMessage('Error!');
-   				}
-   			}
-   		});
+    this.ajaxRequest({
+      url: self._url('nikos'),
+      method: 'POST',
+      data: $('#screens .answer form').serialize(),
+      dataType: 'json',
+      success: function(data, textStatus, jqXHR){
+        self.ajaxFree();
+        if(data.status == 'success'){
+        	self.showMessage('Answer successfully sent!');
+        self.showTeams();
+        }else{
+        	self.showMessage('Error!');
+        }
+      }
+    });
   },
 
   showSignIn: function(){
-  	this.showWindow('sign_in');
+  this.showWindow('sign_in');
   },
 
   showTeams: function(){
-  	this.loadTeams();
+    this.loadTeams();
 
-  	this.showWindow('teams');
+    this.showWindow('teams');
 
     self = this;
 
@@ -260,9 +256,9 @@ var NIKONIKO = {
   },
 
   showQuestions: function(){
-  	this.loadQuestions();
+    this.loadQuestions();
 
-  	this.showWindow('questions');
+    this.showWindow('questions');
 
     this.startRender(function() {
       this.loadTQuestions();
@@ -270,34 +266,35 @@ var NIKONIKO = {
   },
 
   showAnswerForm: function(question_id){
-  	$('#screens .answer h1').html('Q: ' + $('[data-question-id="' + question_id + '"]').html());
-  	$('#screens .answer ul.values li a.selected_value').removeClass('selected_value');
-  	$('#screens .answer ul.values li a.value_50').addClass('selected_value');
-  	$('#screens .answer input[name="niko[question_id]"]').val(question_id);
-  	this.showWindow('answer');
- 	},
+    $('#screens .answer h1').html('Q: ' + $('[data-question-id="' + question_id + '"]').html());
+    $('#screens .answer ul.values li a.selected_value').removeClass('selected_value');
+    $('#screens .answer ul.values li a.value_50').addClass('selected_value');
+    $('#screens .answer input[name="niko[question_id]"]').val(question_id);
+    this.showWindow('answer');
+  },
 
   renderNotifications: function(){
-      self = this;
+    self = this;
 
-      var notifications = this.getNotifications();
-      var html = '';
+    var notifications = this.getNotifications();
+    var html = '';
 
-      for(i in notifications){
-        var notification = notifications[i];
-        var class_name = 'notifiaction';
-        if(notification.unread){
-          var class_name = 'unread_notification';
-        }
-        html = '<li class="' + class_name + '">You have new question: <a href="#" data-notification-id="' + notification.id + '">' + notification.subject + '</a></li>' + html;
+    for(i in notifications){
+      var notification = notifications[i];
+      var class_name = 'notifiaction';
+      if(notification.unread){
+        class_name = 'unread_notification';
       }
 
-      $('#screens .screen.notifications .list').html(html);
+      html = '<li class="' + class_name + '">You have new question: <a href="#" data-notification-id="' + notification.id + '">' + notification.subject + '</a></li>' + html;
+    }
 
-      $('#screens .screen.notifications .list a').click(function(){
-        var id = $(this).data('notification-id');
-        self.showNotification(id);
-      });
+    $('#screens .screen.notifications .list').html(html);
+
+    $('#screens .screen.notifications .list a').click(function(){
+      var id = $(this).data('notification-id');
+      self.showNotification(id);
+    });
   },
 
   showNotifications: function(){
@@ -311,59 +308,59 @@ var NIKONIKO = {
   },
 
   showNotification: function(notification_id){
-      var id = parseInt(notification_id);
-      var notifications = this.getNotifications();
-      var notification = null;
-      for(i in notifications){
-        if(notifications[i].id == id){
-          notification = notifications[i];
-          break;
-        }
+    var id = parseInt(notification_id);
+    var notifications = this.getNotifications();
+    var notification = null;
+    for(i in notifications){
+      if(notifications[i].id == id){
+        notification = notifications[i];
+        break;
       }
-      if(notification == null) return;
-      this.setActiveTeam(notification.group_id);
-      this.showAnswerForm(notification.body);
-      $('#screens .answer h1').html('Q: ' + notification.subject);
-      this.showWindow('answer');
-      this.readNotification(notification.id);
+    }
+    if(notification == null) return;
+    this.setActiveTeam(notification.group_id);
+    this.showAnswerForm(notification.body);
+    $('#screens .answer h1').html('Q: ' + notification.subject);
+    this.showWindow('answer');
+    this.readNotification(notification.id);
   },
 
   bindEvents: function(){
-	   	var self = this;
+    var self = this;
 
-	   	$('#screens .sign_in form').on('submit', function(e){
-	   		e.preventDefault();
-	   		self.signIn(this);
-	   	});
+    $('#screens .sign_in form').on('submit', function(e){
+      e.preventDefault();
+      self.signIn(this);
+    });
 
-   		$('#screens .teams ul.list li a').click(function(e){
-   			e.preventDefault();
-   			self.setActiveTeam($(this).attr('data-team-id'));
-   			self.showQuestions();
-   		});
+    $('#screens .teams ul.list li a').click(function(e){
+      e.preventDefault();
+      self.setActiveTeam($(this).attr('data-team-id'));
+      self.showQuestions();
+    });
 
 
-   		$('#screens .questions ul.list li a').click(function(e){
-   			e.preventDefault();
-   			self.showAnswerForm($(this).attr('data-question-id'));
-   		});
+    $('#screens .questions ul.list li a').click(function(e){
+      e.preventDefault();
+      self.showAnswerForm($(this).attr('data-question-id'));
+    });
 
-   		$('#screens .answer ul.values li a').click(function(e){
-   			e.preventDefault();
-   			$('#screens .answer ul.values li a.selected_value').removeClass('selected_value');
-   			$(this).addClass('selected_value');
-   		});
+    $('#screens .answer ul.values li a').click(function(e){
+      e.preventDefault();
+      $('#screens .answer ul.values li a.selected_value').removeClass('selected_value');
+      $(this).addClass('selected_value');
+    });
 
-   		$('#screens .answer form').on('submit', function(e){
-   			e.preventDefault();
-   			self.sendAnswerForm();
-   		});
+    $('#screens .answer form').on('submit', function(e){
+      e.preventDefault();
+      self.sendAnswerForm();
+    });
 
-   		$('#menu li a').click(function(e){
-   			e.preventDefault();
-   			var target = $(this).data('target');
-        self.routeByTarget(target);
-   		});
+    $('#menu li a').click(function(e){
+      e.preventDefault();
+      var target = $(this).data('target');
+      self.routeByTarget(target);
+    });
   },
 
   routeByTarget: function(target){
@@ -376,7 +373,7 @@ var NIKONIKO = {
     }else if(target == 'notifications'){
       self.showNotifications();
     }else{
-      return;
+      return false;
     }
   },
 
@@ -416,18 +413,18 @@ var NIKONIKO = {
   },
 
   run: function(){
-  		self = this;
-  		this.bindEvents();
-  		this.getStorage().get(null, function(data){
-        if(data != null) {
-    			self.setActiveTeam(data.active_team);
-    			self.setActivePage(data.active_page);
-          self.setNotifications(data.notifications);
-          self.setUser(data.userdata);
-        }
+    self = this;
+    this.bindEvents();
+    this.getStorage().get(null, function(data){
+    if(data != null) {
+      self.setActiveTeam(data.active_team);
+      self.setActivePage(data.active_page);
+      self.setNotifications(data.notifications);
+      self.setUser(data.userdata);
+    }
 
-  			self.init();
-  		});
+      self.init();
+    });
   }
 };
 
