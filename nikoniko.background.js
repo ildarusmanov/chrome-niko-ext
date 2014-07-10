@@ -1,5 +1,5 @@
 var NIKONIKO_BG = {
-  ENV_URL: 'http://nikoniko.co/',
+  ENV_URL: 'http://nikoniko-stage.herokuapp.com/',
   USER_DATA: null,
   ACTIVE_PAGE: null,
   ACTIVE_TEAM: null,
