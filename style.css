@@ -295,3 +295,7 @@ form input[type="submit"]:hover {
   display: inline-block;
   margin-left: 3px;
 }
+
+.notification {
+  display: none;
+}
