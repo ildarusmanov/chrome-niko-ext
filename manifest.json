@@ -13,6 +13,7 @@
   "permissions": [
     "http://nikoniko.co/",
     "http://www.nikoniko.co/",
+    "http://nikoniko-stage.herokuapp.com/",
     "http://0.0.0.0:3000/",
     "storage",
     "notifications",
