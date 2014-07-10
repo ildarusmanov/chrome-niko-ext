@@ -1,6 +1,6 @@
 
 var NIKONIKO_BG = {
-  ENV_URL: 'http://0.0.0.0:3000/',
+  ENV_URL: 'http://nikoniko.co/',
   USER_DATA: null,
   ACTIVE_PAGE: null,
   ACTIVE_TEAM: null,
