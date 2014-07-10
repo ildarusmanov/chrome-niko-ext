@@ -145,10 +145,6 @@ var NIKONIKO_BG = {
 
     if(this.isGuest()) return false;
 
-    for(i in to_render) {
-      this.renderQuestionNotification(to_render[i]);
-    }
-
     n_count = 0;
     var all_notifications = this.getNotifications();
     for(i in all_notifications){
@@ -158,6 +154,11 @@ var NIKONIKO_BG = {
     }
 
     this.setUnread(n_count);
+
+    for(i in to_render) {
+      this.renderQuestionNotification(to_render[i]);
+    }
+
   },
 
 
