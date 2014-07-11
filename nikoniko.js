@@ -184,7 +184,7 @@ var NIKONIKO = {
   loadTeams: function(){
     self = this;
     this.ajaxRequest({
-      url:  self._url('groups/joined_groups'),
+      url:  self._url('api/v1/groups/joined'),
       dataType: 'json',
       success: function(data, textStatus, jqXHR){
         self.ajaxFree();
@@ -207,7 +207,7 @@ var NIKONIKO = {
   loadQuestions: function(){
     self = this;
     this.ajaxRequest({
-      url:  self._url('groups/' + self.getActiveTeam() + '/get_active_questions'),
+      url:  self._url('api/v1/group/' + self.getActiveTeam() + '/active_questions'),
       dataType: 'json',
       success: function(data, textStatus, jqXHR){
         self.ajaxFree();
@@ -223,7 +223,7 @@ var NIKONIKO = {
     $('input[name="niko[group_id]"]').val(self.getActiveTeam());
 
     this.ajaxRequest({
-      url: self._url('nikos'),
+      url: self._url('api/v1/nikos'),
       method: 'POST',
       data: $('#screens .answer form').serialize(),
       dataType: 'json',

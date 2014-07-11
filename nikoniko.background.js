@@ -1,5 +1,5 @@
 var NIKONIKO_BG = {
-  ENV_URL: 'http://nikoniko-stage.herokuapp.com/',
+  ENV_URL: 'http://nokoniko-stage.herokuapp.com/',
   USER_DATA: null,
   ACTIVE_PAGE: null,
   ACTIVE_TEAM: null,
@@ -197,11 +197,11 @@ var NIKONIKO_BG = {
 
   getToken: function(){
     if(this.isGuest()
-      || this.getUser().token == 'undefined'
-      || this.getUser().token == ''){
+      || this.getUser().secret == 'undefined'
+      || this.getUser().secret == ''){
       return '';
     }else{
-      return this.getUser().token;
+      return this.getUser().secret;
     }
   },
 
@@ -216,7 +216,7 @@ var NIKONIKO_BG = {
     if(this.getToken() == ''){
       return this.ENV_URL + page;
     }else{
-      return this.ENV_URL + page + '?token=' + this.getToken();
+      return this.ENV_URL + page + '?secret=' + this.getToken();
     }
   },
 
