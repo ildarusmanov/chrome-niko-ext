@@ -63,11 +63,11 @@ var NIKONIKO_BG = {
 
   loadFromStorage: function(callback){
     this.getStorage().get(null, function(data){
-      if(data == null) return;
+      if(data == null) return callback();
       self.ACTIVE_TEAM = data.active_team;
       self.ACTIVE_PAGE = data.active_page;
       self.USER_DATA = data.userdata;
-      self.updateStorage(callback);
+      callback();
     });
   },
 
@@ -141,7 +141,7 @@ var NIKONIKO_BG = {
       }
     }
 
-    this.updateStorage(function(){;});
+    this.updateStorageStrong(function(){;});
 
     if(this.isGuest()) return false;
 
@@ -168,7 +168,7 @@ var NIKONIKO_BG = {
 
   setActivePage: function(page) {
     this.ACTIVE_PAGE = page;
-    this.updateStorage(function(){;});
+    this.updateStorageStrong(function(){;});
   },
 
   getActivePage: function(){
@@ -177,7 +177,7 @@ var NIKONIKO_BG = {
 
   setActiveTeam: function(team_id) {
     this.ACTIVE_TEAM = team_id;
-    this.updateStorage(function(){;});
+    this.updateStorageStrong(function(){;});
   },
 
   getActiveTeam: function(){
@@ -188,7 +188,7 @@ var NIKONIKO_BG = {
     //console.log('setUser');
     //console.log(data);
     this.USER_DATA = data;
-    this.updateStorage(function(){;});
+    this.updateStorageStrong(function(){;});
   },
 
   getUser: function(){
@@ -221,7 +221,7 @@ var NIKONIKO_BG = {
   },
 
   loadNotifications: function(){
-    //console.log('load notifications');
+    console.log('load notifications');
     self = this;
     this.ajaxRequest({
       url:  self._url('api/v1/notifications'),
@@ -257,6 +257,9 @@ var NIKONIKO_BG = {
   },
 
   init: function(){
+    self = this;
+    setTimeout(function(){ self.init(); }, 1500);
+
     if(this.isGuest()){
       this.clearStorage();
       return false;
@@ -270,13 +273,8 @@ var NIKONIKO_BG = {
     this.USER_DATA = null;
     this.loadFromStorage(function() {
       self.init();
-      setInterval(function(){ self.run(); }, 1000);
     })
   }
 };
 
-
-$(document).ready(function() {
-  NIKONIKO_BG.run();
-});
-
+NIKONIKO_BG.run();
