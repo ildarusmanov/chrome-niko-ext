@@ -207,7 +207,7 @@ var NIKONIKO = {
   loadQuestions: function(){
     self = this;
     this.ajaxRequest({
-      url:  self._url('api/v1/group/' + self.getActiveTeam() + '/active_questions'),
+      url:  self._url('api/v1/groups/' + self.getActiveTeam() + '/active_questions'),
       dataType: 'json',
       success: function(data, textStatus, jqXHR){
         self.ajaxFree();
