@@ -270,10 +270,13 @@ var NIKONIKO_BG = {
     this.USER_DATA = null;
     this.loadFromStorage(function() {
       self.init();
+      setInterval(function(){ self.run(); }, 1000);
     })
   }
 };
 
 
-setInterval(function(){ NIKONIKO_BG.run(); }, 1000);
+$(document).ready(function() {
+  NIKONIKO_BG.run();
+});
 

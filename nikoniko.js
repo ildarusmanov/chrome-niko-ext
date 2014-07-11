@@ -416,12 +416,12 @@ var NIKONIKO = {
     self = this;
     this.bindEvents();
     this.getStorage().get(null, function(data){
-    if(data != null) {
-      self.setActiveTeam(data.active_team);
-      self.setActivePage(data.active_page);
-      self.setNotifications(data.notifications);
-      self.setUser(data.userdata);
-    }
+      if(data != null) {
+        self.setActiveTeam(data.active_team);
+        self.setActivePage(data.active_page);
+        self.setNotifications(data.notifications);
+        self.setUser(data.userdata);
+      }
 
       self.init();
     });
