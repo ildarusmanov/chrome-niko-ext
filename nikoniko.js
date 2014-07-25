@@ -55,6 +55,7 @@ var NIKONIKO = {
   readNotification: function(id){
     self = this;
     this.getBg().readNotification(id);
+    $('#notification_' + id).removeClass('unread_notification');
     this.ajaxRequest({
       url:  self._url('api/v1/notifications/' + id),
       data: { _method: 'PUT' },
@@ -286,7 +287,7 @@ var NIKONIKO = {
         class_name = 'unread_notification';
       }
 
-      html = '<li class="' + class_name + '">You have new question: <a href="#" data-notification-id="' + notification.id + '">' + notification.subject + '</a></li>' + html;
+      html = '<li class="' + class_name + '" id="notification_' + notification.id + '">You have new question: <a href="#" data-notification-id="' + notification.id + '">' + notification.subject + '</a></li>' + html;
     }
 
     $('#screens .screen.notifications .list').html(html);
@@ -325,6 +326,16 @@ var NIKONIKO = {
     this.readNotification(notification.id);
   },
 
+  readAllNotifications: function() {
+    var notifications = this.getNotifications();
+    for(i in notifications){
+      var notification = notifications[i];
+      if(notification.unread){
+        this.readNotification(notification.id);
+      }
+    }
+  },
+
   bindEvents: function(){
     var self = this;
 
@@ -354,6 +365,11 @@ var NIKONIKO = {
     $('#screens .answer form').on('submit', function(e){
       e.preventDefault();
       self.sendAnswerForm();
+    });
+
+    $('#screens .notifications .mark_all_as_read').click(function(e){
+      e.preventDefault();
+      self.readAllNotifications();
     });
 
     $('#menu li a').click(function(e){
