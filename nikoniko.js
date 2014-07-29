@@ -56,6 +56,7 @@ var NIKONIKO = {
     self = this;
     this.getBg().readNotification(id);
     $('#notification_' + id).removeClass('unread_notification');
+    $('#notification_' + id).hide();
     this.ajaxRequest({
       url:  self._url('api/v1/notifications/' + id),
       data: { _method: 'PUT' },
@@ -84,8 +85,8 @@ var NIKONIKO = {
   },
 
   setActivePage: function(page) {
-  this.stopRender();
-  this.getBg().setActivePage(page);
+    this.stopRender();
+    this.getBg().setActivePage(page);
     $('#menu li a.active').removeClass('active');
     $('#menu li a[data-target="' + page + '"]').addClass('active');
   },
