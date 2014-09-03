@@ -7,6 +7,15 @@ var NIKONIKO_BG = {
   REQUEST: null,
   NOTIFICATIONS: [],
   STORAGE_LOCK: false,
+  PAUSED: false,
+
+  pause: function() {
+    this.PAUSED = true;
+  },
+
+  resume: function() {
+    this.PAUSED = false;
+  },
 
   setAllRead: function() {
     var bs = chrome.browserAction;
@@ -258,7 +267,11 @@ var NIKONIKO_BG = {
 
   init: function(){
     self = this;
-    setTimeout(function(){ self.init(); }, 1500);
+    setTimeout(function(){
+      self.init();
+    }, 1500);
+
+    if(this.PAUSED) return;
 
     if(this.isGuest()){
       this.clearStorage();

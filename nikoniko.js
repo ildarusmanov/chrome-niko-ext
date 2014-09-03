@@ -10,6 +10,14 @@ var NIKONIKO = {
     return this.getBg().getStorage();
   },
 
+  pause: function() {
+    this.getBg().pause();
+  },
+
+  resume: function() {
+    this.getBg().resume();
+  },
+
   storageLocked: function() {
     return this.getBg().storageLocked();
   },
@@ -328,6 +336,7 @@ var NIKONIKO = {
   },
 
   readAllNotifications: function() {
+    this.pause();
     var notifications = this.getNotifications();
     for(i in notifications){
       var notification = notifications[i];
@@ -335,6 +344,7 @@ var NIKONIKO = {
         this.readNotification(notification.id);
       }
     }
+    this.resume();
   },
 
   bindEvents: function(){
