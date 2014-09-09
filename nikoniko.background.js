@@ -232,6 +232,11 @@ var NIKONIKO_BG = {
   loadNotifications: function(){
     console.log('load notifications');
     self = this;
+    
+    if(self.PAUSED) {
+      return 0;
+    }
+
     this.ajaxRequest({
       url:  self._url('api/v1/notifications'),
       dataType: 'json',
@@ -271,7 +276,7 @@ var NIKONIKO_BG = {
       self.init();
     }, 1500);
 
-    if(this.PAUSED) return;
+    
 
     if(this.isGuest()){
       this.clearStorage();

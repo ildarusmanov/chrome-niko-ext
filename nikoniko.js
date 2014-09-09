@@ -60,11 +60,11 @@ var NIKONIKO = {
     $('.notifications_count').html(cnt + '');
   },
 
-  readNotification: function(id){
+  readNotification: function(id) {
     self = this;
     this.getBg().readNotification(id);
     $('#notification_' + id).removeClass('unread_notification');
-    $('#notification_' + id).hide();
+    $('#notification_' + id).hide(0);
     this.ajaxRequest({
       url:  self._url('api/v1/notifications/' + id),
       data: { _method: 'PUT' },
@@ -78,7 +78,11 @@ var NIKONIKO = {
   },
 
 
-  setNotifications: function(){
+  setNotifications: function() {
+    if(this.getBg().PAUSED) {
+      return 0;
+    }
+
     n_count = 0;
     var notifications = this.getNotifications();
     for(i in notifications){
@@ -337,6 +341,7 @@ var NIKONIKO = {
 
   readAllNotifications: function() {
     this.pause();
+    $('.screen_notifications').hide(0);
     var notifications = this.getNotifications();
     for(i in notifications){
       var notification = notifications[i];
@@ -344,6 +349,7 @@ var NIKONIKO = {
         this.readNotification(notification.id);
       }
     }
+    $('.screen_notifications').show(0);
     this.resume();
   },
 
