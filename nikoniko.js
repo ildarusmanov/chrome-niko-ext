@@ -191,8 +191,6 @@ var NIKONIKO = {
       var html = '<li><a data-team-id="' + t.id + '" href="#">' + t.title + '</a></li>';
       $('#screens .teams ul').append(html);
     }
-
-    this.bindEvents();
   },
 
   loadTeams: function(){
@@ -214,8 +212,6 @@ var NIKONIKO = {
       var html = '<li><a data-question-id="' + q.id + '" href="#">' + q.text + '</a></li>';
       $('#screens .questions ul').append(html);
     }
-
-    this.bindEvents();
   },
 
   loadQuestions: function(){
@@ -341,7 +337,7 @@ var NIKONIKO = {
 
   readAllNotifications: function() {
     this.pause();
-    $('.screen_notifications').hide(0);
+    $('.screen.notifications').hide();
     var notifications = this.getNotifications();
     for(i in notifications){
       var notification = notifications[i];
@@ -349,47 +345,47 @@ var NIKONIKO = {
         this.readNotification(notification.id);
       }
     }
-    $('.screen_notifications').show(0);
+    $('.screen.notifications').show();
     this.resume();
   },
 
   bindEvents: function(){
     var self = this;
 
-    $('#screens .sign_in form').on('submit', function(e){
+    $('#screens').on('submit', '.sign_in form', function(e){
       e.preventDefault();
       self.signIn(this);
     });
 
-    $('#screens .teams ul.list li a').click(function(e){
+    $('#screens').on('click', '.teams ul.list li a', function(e) {
       e.preventDefault();
       self.setActiveTeam($(this).attr('data-team-id'));
       self.showQuestions();
     });
 
 
-    $('#screens .questions ul.list li a').click(function(e){
+    $('#screens').on('click', '.questions ul.list li a', function(e){
       e.preventDefault();
       self.showAnswerForm($(this).attr('data-question-id'));
     });
 
-    $('#screens .answer ul.values li a').click(function(e){
+    $('#screens').on('click', '.answer ul.values li a', function(e){
       e.preventDefault();
       $('#screens .answer ul.values li a.selected_value').removeClass('selected_value');
       $(this).addClass('selected_value');
     });
 
-    $('#screens .answer form').on('submit', function(e){
+    $('#screens').on('submit', '.answer form', function(e){
       e.preventDefault();
       self.sendAnswerForm();
     });
 
-    $('#screens .notifications .mark_all_as_read').click(function(e){
+    $('#screens').on('click', '.notifications .mark_all_as_read', function(e){
       e.preventDefault();
       self.readAllNotifications();
     });
 
-    $('#menu li a').click(function(e){
+    $('#menu').on('click', 'li a', function(e){
       e.preventDefault();
       var target = $(this).data('target');
       self.routeByTarget(target);
