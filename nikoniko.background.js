@@ -100,7 +100,6 @@ var NIKONIKO_BG = {
 
   updateStorage: function(callback){
     if(this.storageLocked()){
-      console.log('can`t save, storage locked');
       return;
     }
 
@@ -130,27 +129,23 @@ var NIKONIKO_BG = {
   },
 
   readNotification: function(id){
-    console.log(this.getNotifications());
     var i = this.notificationIndex(parseInt(id));
     if(i >= 0) this.NOTIFICATIONS[i].unread = false;
-    console.log(i);
   },
 
   setNotifications: function(data){
     var to_render = [];
 
     for(i in data) {
-      //data[i].body = $.parseJSON(data[i].body);
-      index = this.notificationIndex(data[i].id);
+      notification = data[i]
+      index = this.notificationIndex(notification.id);
       if(index < 0){
-        this.NOTIFICATIONS.push(data[i]);
-        if(data[i].unread) to_render.push(data[i]);
-      }else{
-        data[index] = data[i];
+        this.NOTIFICATIONS.push(notification);
+        if (notification.unread) to_render.push(notification);
       }
     }
 
-    this.updateStorageStrong(function(){;});
+    this.updateStorageStrong(function(){});
 
     if(this.isGuest()) return false;
 
@@ -158,7 +153,7 @@ var NIKONIKO_BG = {
     var all_notifications = this.getNotifications();
     for(i in all_notifications){
       var n = all_notifications[i];
-      chrome.notifications.clear(n.id + '', function(wasCleared){;});
+      chrome.notifications.clear(n.id + '', function(wasCleared){});
       if(n.unread) n_count++;
     }
 
@@ -198,8 +193,6 @@ var NIKONIKO_BG = {
   },
 
   setUser: function(data){
-    //console.log('setUser');
-    //console.log(data);
     this.USER_DATA = data;
     this.updateStorageStrong(function(){;});
   },
@@ -234,7 +227,6 @@ var NIKONIKO_BG = {
   },
 
   loadNotifications: function(){
-    console.log('load notifications');
     self = this;
     
     if(self.PAUSED) {
@@ -246,8 +238,6 @@ var NIKONIKO_BG = {
       dataType: 'json',
       success: function(data, textStatus, jqXHR){
         self.ajaxFree();
-        //console.log('data notifications');
-        //console.log(data);
         self.setNotifications(data);
       }
     });
@@ -265,13 +255,9 @@ var NIKONIKO_BG = {
 
     var self = this;
 
-    chrome.notifications.onClicked.addListener(function(notification_id){;
-      //console.log('notification clicked');
-    });
+    chrome.notifications.onClicked.addListener(function(notification_id){});
 
-    chrome.notifications.create(notification.id + '', options, function(){
-      //console.log('notification created');
-    });
+    chrome.notifications.create(notification.id + '', options, function(){});
   },
 
   init: function(){
