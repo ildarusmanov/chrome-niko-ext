@@ -37,19 +37,6 @@ var NIKONIKO = {
     $('#loading').hide();
   },
 
-  startRender: function(callback) {
-    this.stopRender();
-    this.RENDER_TIMER = setInterval(5000, function(){
-      callback();
-    });
-  },
-
-  stopRender: function() {
-    if(this.RENDER_TIMER == null) return;
-    clearInterval(this.RENDER_TIMER);
-    this.RENDER_TIMER = null;
-  },
-
   setAllRead: function() {
     $('.notifications_count').hide();
   },
@@ -72,7 +59,7 @@ var NIKONIKO = {
       dataType: 'json',
       success: function(data, textStatus, jqXHR){
         self.ajaxFree();
-        self.setNotifications(data);
+        self.setNotifications();
       }
     });
   },
@@ -97,7 +84,6 @@ var NIKONIKO = {
   },
 
   setActivePage: function(page) {
-    this.stopRender();
     this.getBg().setActivePage(page);
     $('#menu li a.active').removeClass('active');
     $('#menu li a[data-target="' + page + '"]').addClass('active');
@@ -257,22 +243,12 @@ var NIKONIKO = {
     this.loadTeams();
 
     this.showWindow('teams');
-
-    self = this;
-
-    this.startRender(function() {
-      self.loadTeams();
-    });
   },
 
   showQuestions: function(){
     this.loadQuestions();
 
     this.showWindow('questions');
-
-    this.startRender(function() {
-      this.loadTQuestions();
-    });
   },
 
   showAnswerForm: function(question_id){
@@ -307,14 +283,11 @@ var NIKONIKO = {
     });
   },
 
+  // wtf?
   showNotifications: function(){
     this.renderNotifications();
 
     this.showWindow('notifications');
-
-    this.startRender(function() {
-      this.renderNotifications();
-    });
   },
 
   showNotification: function(notification_id){
@@ -338,15 +311,24 @@ var NIKONIKO = {
   readAllNotifications: function() {
     this.pause();
     $('.screen.notifications').hide();
-    var notifications = this.getNotifications();
-    for(i in notifications){
-      var notification = notifications[i];
-      if(notification.unread){
-        this.readNotification(notification.id);
+    this.ajaxRequest({
+      url:  self._url('api/v1/notifications/mark_all_as_read'),
+      data: { _method: 'PUT' },
+      type: 'POST',
+      dataType: 'json',
+      success: function(data, textStatus, jqXHR){
+        self.ajaxFree();
+        self.markAllNotificationsAsRead();
       }
-    }
+    });
     $('.screen.notifications').show();
     this.resume();
+  },
+
+  markAllNotificationsAsRead: function() {
+    this.setUnread(0);
+    $('#screens .screen.notifications .list').html('');
+    this.getBg().markAllNotificationsAsRead()
   },
 
   bindEvents: function(){
@@ -448,7 +430,7 @@ var NIKONIKO = {
       if(data != null) {
         self.setActiveTeam(data.active_team);
         self.setActivePage(data.active_page);
-        self.setNotifications(data.notifications);
+        self.setNotifications();
         self.setUser(data.userdata);
       }
 

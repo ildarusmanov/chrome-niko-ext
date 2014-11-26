@@ -170,9 +170,13 @@ var NIKONIKO_BG = {
 
   },
 
-
   getNotifications: function(){
     return this.NOTIFICATIONS;
+  },
+
+  markAllNotificationsAsRead: function() {
+    this.NOTIFICATIONS = [];
+    this.setAllRead();
   },
 
   setActivePage: function(page) {
